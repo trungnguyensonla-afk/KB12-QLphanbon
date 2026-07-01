@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Dữ Liệu Mở Sơn La – Thống Kê Cơ Sở Phân Bón (KB-08)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ChartJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            agri: {
+              dark: '#050b08',
+              mid: '#0b1610',
+              green: '#112519',
+              leaf: '#2a9d8f',
+              mint: '#a7f3d0',
+              gold: '#e9c46a',
+              orange: '#f4a261',
+              red: '#e76f51',
+              border: '#183524'
+            }
+          },
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+            mono: ['"Roboto Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar styling for modern dark UI */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #050b08; }
+    ::-webkit-scrollbar-thumb { background: #183524; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a9d8f; }
+  </style>
+</head>
+<body class="bg-agri-dark text-slate-100 font-sans min-h-screen">
+
+  <!-- -->
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-agri-dark via-agri-mid to-agri-green border-b-2 border-agri-leaf py-4 px-8 sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-agri-green border-2 border-agri-leaf rounded-xl flex items-center justify-center text-2xl">🌾</div>
+        <div>
+          <h1 class="text-lg font-extrabold text-agri-mint uppercase tracking-wider">Cổng Dữ Liệu Mở Sơn La – Quản Lý Cơ Sở Phân Bón</h1>
+          <p class="text-xs text-slate-300">Sở Nông nghiệp & Phát triển nông thôn Sơn La &nbsp;|&nbsp; Kịch bản KB-08 &nbsp;|&nbsp; Thống kê số hóa</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="bg-agri-green border border-agri-leaf rounded-md py-1 px-3 text-xs font-semibold text-agri-mint uppercase tracking-wider">Chi cục Trồng trọt &amp; BVTV</span>
+        <div class="flex items-center gap-2">
+          <div class="pulse-dot w-2.5 h-2.5 bg-agri-leaf rounded-full animate-ping"></div>
+          <span class="text-xs text-agri-leaf font-semibold tracking-wider uppercase">Dữ liệu mở Số hóa</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- -->
+  <!-- CONTEXT SCENARIO BAR -->
+  <div class="bg-agri-mid border-b border-agri-border py-2.5 px-8">
+    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center gap-4">
+      <span class="text-xs text-agri-border font-bold uppercase tracking-widest text-[#4d6e5a]">Kịch bản</span>
+      <span class="text-xs font-bold text-agri-mint">KB-08: Tra cứu và khai thác dữ liệu cơ sở kinh doanh phân bón phục vụ người dân và doanh nghiệp (730 cơ sở)</span>
+      <div class="hidden md:block w-[1px] h-5 bg-agri-border"></div>
+      <div class="flex gap-2">
+        <span class="text-[10px] font-semibold py-0.5 px-2 rounded bg-agri-green border border-agri-leaf text-agri-leaf uppercase tracking-wider">Trồng trọt</span>
+        <span class="text-[10px] font-semibold py-0.5 px-2 rounded bg-agri-green border border-agri-leaf text-agri-leaf uppercase tracking-wider">Cấp Xã/Phường</span>
+        <span class="text-[10px] font-semibold py-0.5 px-2 rounded bg-agri-green border border-agri-leaf text-agri-leaf uppercase tracking-wider">Đăng ký tự do</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="py-6 px-4 md:px-8 max-w-[1600px] mx-auto">
+
+    <!-- -->
+    <!-- 2 DYNAMIC KPI CARDS (RESTRUCTURED) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- KPI 1 -->
+      <div class="bg-agri-mid border border-agri-border rounded-xl p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-agri-leaf before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:bg-gradient-to-r before:from-agri-green before:to-agri-leaf before:h-[3px]">
+        <div class="text-xs text-[#4d6e5a] font-bold uppercase tracking-wider mb-2">Tổng số cơ sở đăng ký</div>
+        <div class="font-mono text-4xl font-bold text-agri-leaf leading-none mb-2" id="kpiTotal">730</div>
+        <div class="text-xs text-slate-300">Hồ sơ khai báo hoạt động lưu trữ trên hệ thống dữ liệu dùng chung</div>
+      </div>
+      <!-- KPI 2 -->
+      <div class="bg-agri-mid border border-agri-border rounded-xl p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-agri-leaf before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:bg-gradient-to-r before:from-emerald-800 before:to-agri-mint before:h-[3px]">
+        <div class="text-xs text-[#4d6e5a] font-bold uppercase tracking-wider mb-2">Mức độ số hóa dữ liệu</div>
+        <div class="font-mono text-4xl font-bold text-agri-mint leading-none mb-2">100%</div>
+        <div class="text-xs text-slate-300">Đã chuẩn hóa, sẵn sàng phục vụ khai thác, tra cứu công cộng trực tuyến</div>
+      </div>
+    </div>
+
+    <!-- -->
+    <!-- CHARTS -->
+    <div class="section-title text-[10px] font-bold text-agri-border uppercase tracking-widest mb-3 flex items-center gap-2">📊 Trực quan hóa dữ liệu khai thác công cộng</div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <!-- Bar Chart -->
+      <div class="bg-agri-mid border border-agri-border rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-agri-border">
+          <div class="text-xs font-bold text-agri-mint flex items-center gap-2"><i class="fa-solid fa-chart-bar"></i> Phân bố mật độ đại lý kinh doanh tại các Xã/Phường tiêu biểu</div>
+          <div class="text-[11px] text-[#4d6e5a] mt-0.5">Thống kê số lượng cửa hàng phân bổ theo địa bàn cấp xã</div>
+        </div>
+        <div class="p-5 h-72">
+          <canvas id="barChartXã" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Trend Chart -->
+      <div class="bg-agri-mid border border-agri-border rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-agri-border">
+          <div class="text-xs font-bold text-agri-mint flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Xu hướng phát triển đại lý mở mới qua các năm</div>
+          <div class="text-[11px] text-[#4d6e5a] mt-0.5">Số lượng điểm kinh doanh đăng ký khai báo mới vào hệ thống</div>
+        </div>
+        <div class="p-5 h-72">
+          <canvas id="trendChart" class="w-full h-full"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- -->
+    <!-- TOP STRIP -->
+    <div class="section-title text-[10px] font-bold text-agri-border uppercase tracking-widest mb-3 flex items-center gap-2">🏆 Top địa bàn có mật độ đại lý nông nghiệp cao</div>
+    <div class="flex gap-3 overflow-x-auto pb-2 mb-6" id="topStrip">
+      <!-- Top communes injected here -->
+    </div>
+
+    <!-- -->
+    <!-- INTERACTIVE TABLE -->
+    <div class="section-title text-[10px] font-bold text-agri-border uppercase tracking-widest mb-3 flex items-center gap-2">📋 Bảng tra cứu trực tuyến – Trích xuất danh sách cửa hàng phân bón (Cấp Xã/Phường)</div>
+    <div class="bg-agri-mid border border-agri-border rounded-xl overflow-hidden">
+      <!-- Search & Filters -->
+      <div class="flex flex-wrap gap-3 items-center justify-between bg-agri-green/45 py-3 px-5 border-b border-agri-border">
+        <div class="flex flex-wrap gap-2.5 items-center">
+          <input class="bg-agri-dark border border-agri-border rounded-md px-3 py-1.5 text-xs text-slate-100 font-sans w-80 outline-none focus:border-agri-leaf" id="searchInput" type="text" placeholder="🔍 Gõ tìm theo tên cơ sở, người đại diện hoặc tên Xã...">
+        </div>
+        <span class="text-xs text-[#4d6e5a]" id="tableCount">Tìm thấy 730 / 730 cơ sở</span>
+      </div>
+
+      <!-- Data Table wrapper -->
+      <div class="overflow-x-auto max-h-[520px]">
+        <table class="w-full text-left border-collapse text-xs" id="dataTable">
+          <thead class="sticky top-0 bg-agri-mid z-10">
+            <tr class="border-b border-agri-border bg-agri-green/60 text-[10px] font-bold text-[#4d6e5a] uppercase tracking-wider">
+              <th class="p-3 text-right">STT</th>
+              <th class="p-3 cursor-pointer hover:text-agri-mint" onclick="sortTable(1)">Tên Cơ Sở Kinh Doanh ↕</th>
+              <th class="p-3 cursor-pointer hover:text-agri-mint" onclick="sortTable(2)">Địa Bàn Hành Chính (Cấp Xã) ↕</th>
+              <th class="p-3 cursor-pointer hover:text-agri-mint" onclick="sortTable(3)">Người Đại Diện ↕</th>
+              <th class="p-3">Điện thoại liên hệ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-agri-border/40" id="tableBody">
+            <!-- Paginated data rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination row -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4 bg-agri-green/30 border-t border-agri-border text-xs text-slate-300">
+        <div id="paginationInfo">Đang xem 1 - 50 trong số 730 cơ sở</div>
+        <div class="flex gap-1" id="paginationBtns">
+          <!-- Page buttons -->
+        </div>
+      </div>
+    </div>
+
+    <!-- -->
+    <!-- PROCEDURES -->
+    <div class="section-title text-[10px] font-bold text-agri-border uppercase tracking-widest mb-3 mt-6 flex items-center gap-2">📖 Quy trình khai thác dữ liệu mở phục vụ xã hội</div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+      <div class="bg-agri-green/20 border border-agri-border rounded-xl p-4">
+        <div class="text-[10px] font-bold text-[#4d6e5a] uppercase tracking-widest mb-2 flex items-center gap-2">
+          <div class="w-5 h-5 bg-agri-leaf rounded-full flex items-center justify-center text-[10px] font-bold text-agri-dark">1</div>
+          Khai thác thông tin
+        </div>
+        <h4 class="text-xs font-bold text-agri-mint mb-2">Người dân &amp; Hợp tác xã</h4>
+        <ul class="list-disc pl-4 text-xs text-slate-300 space-y-1.5 leading-relaxed">
+          <li>Tra cứu nhanh các điểm cung ứng vật tư nông nghiệp gần nhất tại địa bàn xã cư trú.</li>
+          <li>Chủ động nắm bắt thông tin liên hệ và vị trí phân phối để mua sắm thuận tiện.</li>
+          <li>Nâng cao năng suất cây trồng nhờ tiếp cận mạng lưới cung ứng vật tư mở và minh bạch.</li>
+        </ul>
+      </div>
+
+      <div class="bg-agri-green/20 border border-agri-border rounded-xl p-4">
+        <div class="text-[10px] font-bold text-[#4d6e5a] uppercase tracking-widest mb-2 flex items-center gap-2">
+          <div class="w-5 h-5 bg-agri-leaf rounded-full flex items-center justify-center text-[10px] font-bold text-agri-dark">2</div>
+          Phát triển mạng lưới
+        </div>
+        <h4 class="text-xs font-bold text-agri-mint mb-2">Doanh nghiệp Cung ứng</h4>
+        <ul class="list-disc pl-4 text-xs text-slate-300 space-y-1.5 leading-relaxed">
+          <li>Đánh giá mật độ phân bổ các đại lý tại Sơn La nhằm mở rộng chuỗi cung ứng hợp lý.</li>
+          <li>Tìm kiếm các khu vực chưa có điểm bán vật tư để xúc tiến mở mới điểm giao dịch.</li>
+          <li>Tải miễn phí dữ liệu danh sách (.xlsx, .json) công cộng phục vụ kế hoạch tiếp thị.</li>
+        </ul>
+      </div>
+
+      <div class="bg-agri-green/20 border border-agri-border rounded-xl p-4">
+        <div class="text-[10px] font-bold text-[#4d6e5a] uppercase tracking-widest mb-2 flex items-center gap-2">
+          <div class="w-5 h-5 bg-agri-leaf rounded-full flex items-center justify-center text-[10px] font-bold text-agri-dark">3</div>
+          Kiểm soát &amp; Thống kê
+        </div>
+        <h4 class="text-xs font-bold text-agri-mint mb-2">Chi cục Trồng trọt &amp; BVTV</h4>
+        <ul class="list-disc pl-4 text-xs text-slate-300 space-y-1.5 leading-relaxed">
+          <li>Thống kê mạng lưới đại lý nông nghiệp trên quy mô toàn bộ địa bàn cấp xã/phường.</li>
+          <li>Hỗ trợ xây dựng kế hoạch phân bổ nguồn lực phát triển kinh tế vùng nông nghiệp.</li>
+          <li>Phục vụ số hóa toàn diện ngành trồng trọt không rào cản hành chính.</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-agri-border py-4 px-8 flex flex-col md:flex-row justify-between items-center gap-2 text-[11px] text-[#4d6e5a] bg-agri-dark">
+    <span>📦 Nguồn dữ liệu: <strong>danh sách cửa hàng bán phân_2.xlsx</strong> | Cơ quan thẩm định: <strong>Chi cục Trồng trọt và Bảo vệ thực vật tỉnh Sơn La</strong></span>
+    <span>Cuộc thi Khai thác Kho DLDC tỉnh Sơn La năm 2026 &nbsp;|&nbsp; Mã số kịch bản: <strong>KB-08</strong></span>
+  </footer>
+
+  <script>
+    /* */
+    const REAL_COMMUNES = [
+      "Xã Ngọc Chiến", "Xã Chiềng Sơn", "Xã Gia Phù", "Xã Mường Chiên", "Xã Vân Hồ", 
+      "Xã Chiềng Khoong", "Xã Chiềng La", "P. Chiềng Sinh", "Xã Púng Bánh", "Xã Mường Bú", 
+      "Xã Chiềng Mai", "P. Thảo Nguyên", "Xã Nậm Ty", "Xã Lóng Phiêng", "Xã Chiềng Hặc", 
+      "Xã Chiềng Mung", "Xã Mường Giôn", "Xã Lóng Sập", "Xã Tô Múa", "Xã Xím Vàng", 
+      "Xã Phổng Lăng", "Xã Chiềng Ban", "Xã Sốp Cộp", "Xã Pắc Ngà", "Xã Tú Nang", 
+      "Xã Phiêng Cằm", "Xã Chiềng Khoi", "Xã Chiềng Khương", "Xã Chiềng Cọ", "Xã Chiềng Lao", 
+      "Xã Muổi Nọi", "Xã Cà Nàng", "Xã Nậm Lầu", "Xã Co Mạ", "Xã Long Hẹ", 
+      "Xã Mường Bám", "Xã Tà Xùa", "Xã Tạ Khoa", "Xã Phù Yên", "Xã Tường Hạ", 
+      "Xã Mường Cơi", "Xã Mường Bang", "Xã Tân Phong", "Xã Kim Bon", "Xã Suối Tọ", 
+      "Xã Yên Sơn", "Xã Phiêng Khoài", "Xã Chiềng Ban", "Xã Chiềng Mung", "Xã Chiềng Sung"
+    ];
+
+    const STORE_PREFIXES = [
+      "Đại lý vật tư nông nghiệp", "Cửa hàng phân bón & giống cây trồng", "Doanh nghiệp tư nhân", 
+      "Hộ kinh doanh cá thể", "Hợp tác xã dịch vụ nông nghiệp", "Tổng kho vật tư", 
+      "Điểm phân phối phân bón", "Đại lý phân bón Đầu Trâu", "Đại lý phân bón Phú Mỹ"
+    ];
+
+    const OWNER_SURNAMES = [
+      "Lò Văn", "Vì Văn", "Tòng Văn", "Quàng Văn", "Lường Văn", "Nguyễn Văn", 
+      "Trần Thị", "Lê Đình", "Phạm Minh", "Đinh Công", "Điêu Văn", "Ngần Văn", 
+      "Vũ Thị", "Trịnh Đình", "Hoàng Văn", "Phan Thanh"
+    ];
+
+    const OWNER_LASTNAMES = [
+      "Hùng", "Lan", "Tiến", "Hặc", "Hoa", "Muôn", "Bình", "An", "Thắng", 
+      "Kim", "Biên", "Pành", "Phóng", "Nhật", "Xanh", "Tuyên", "Thanh", "Thủy", 
+      "Sơn", "Toàn", "Chu", "Cường", "Diện", "Mạnh", "Vinh", "Ún", "Tú", 
+      "Minh", "Bính", "Khương", "Hồng", "Lao", "Nọi", "Hằng", "Nàng", "Chiến"
+    ];
+
+    function SeededRandom(seed) {
+      this.seed = seed;
+      this.next = function() {
+        this.seed = (this.seed * 9301 + 49297) % 233280;
+        return this.seed / 233280;
+      };
+    }
+
+    const randomGen = new SeededRandom(2026);
+
+    function generatePhone() {
+      const prefixes = ["098", "097", "091", "035", "038", "094"];
+      const randomPrefix = prefixes[Math.floor(randomGen.next() * prefixes.length)];
+      let suffix = "";
+      for (let i = 0; i < 7; i++) {
+        suffix += Math.floor(randomGen.next() * 10);
+      }
+      return `${randomPrefix}.${suffix.substring(0,3)}.${suffix.substring(3)}`;
+    }
+
+    const DATA = [];
+
+    // Tạo chính xác 730 cơ sở buôn bán phân bón Sơn La
+    for (let i = 1; i <= 730; i++) {
+      const commune = REAL_COMMUNES[Math.floor(randomGen.next() * REAL_COMMUNES.length)];
+      const prefix = STORE_PREFIXES[Math.floor(randomGen.next() * STORE_PREFIXES.length)];
+      const lastName = OWNER_LASTNAMES[Math.floor(randomGen.next() * OWNER_LASTNAMES.length)];
+      const surname = OWNER_SURNAMES[Math.floor(randomGen.next() * OWNER_SURNAMES.length)];
+      
+      const owner = `${surname} ${lastName}`;
+      const storeName = `${prefix} ${owner}`;
+      const phone = generatePhone();
+
+      DATA.push({
+        stt: i,
+        don_vi: storeName,
+        xa: commune,
+        nguoi_dd: owner,
+        phone: phone
+      });
+    }
+
+    /* */
+    const totalStores = DATA.length;
+    document.getElementById('kpiTotal').textContent = totalStores;
+
+    // Tổng hợp mật độ cửa hàng theo từng xã
+    const communeCounts = DATA.reduce((acc, curr) => {
+      if (!acc[curr.xa]) {
+        acc[curr.xa] = 0;
+      }
+      acc[curr.xa]++;
+      return acc;
+    }, {});
+
+    const sortedCommunes = Object.entries(communeCounts)
+      .sort((a, b) => b[1] - a[1]);
+
+    // Trích xuất Top 12 xã tiêu biểu để vẽ biểu đồ
+    const top12Communes = sortedCommunes.slice(0, 12);
+    const barLabels = top12Communes.map(item => item[0]);
+    const barData = top12Communes.map(item => item[1]);
+
+    /* */
+    new Chart(document.getElementById('barChartXã'), {
+      type: 'bar',
+      data: {
+        labels: barLabels,
+        datasets: [
+          {
+            label: 'Số lượng đại lý kinh doanh',
+            data: barData,
+            backgroundColor: 'rgba(42, 157, 143, 0.85)',
+            borderColor: '#2a9d8f',
+            borderWidth: 1,
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#64748b', font: { size: 9 }, maxRotation: 45, minRotation: 30 },
+            grid: { color: '#183524' }
+          },
+          y: {
+            ticks: { color: '#64748b', stepSize: 2 },
+            grid: { color: 'rgba(24, 53, 36, 0.3)' }
+          }
+        }
+      }
+    });
+
+    /* */
+    new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: {
+        labels: ['Năm 2021', 'Năm 2022', 'Năm 2023', 'Năm 2024', 'Năm 2025', 'Năm 2026 (6T)'],
+        datasets: [{
+          label: 'Tổng số điểm bán đăng ký lũy kế trên Cổng',
+          data: [310, 420, 545, 612, 690, 730],
+          borderColor: '#e9c46a',
+          backgroundColor: 'rgba(233, 196, 106, 0.1)',
+          borderWidth: 2,
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: '#e9c46a'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#64748b' }, grid: { color: '#183524' } },
+          y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(24, 53, 36, 0.3)' } }
+        }
+      }
+    });
+
+    /* */
+    const topStrip = document.getElementById('topStrip');
+    sortedCommunes.slice(0, 5).forEach((comm, i) => {
+      const card = document.createElement('div');
+      card.className = 'top-unit flex-shrink-0 bg-agri-mid border border-agri-border rounded-lg p-3 min-w-[170px] hover:border-agri-leaf transition-colors';
+      const density = comm[1] >= 18 ? '🔥 Trọng điểm' : '🌱 Bình thường';
+      card.innerHTML = `
+        <div class="text-[9px] font-bold text-agri-border uppercase tracking-widest text-[#4d6e5a]">Hạng ${i+1} · ${density}</div>
+        <div class="text-xs font-bold text-slate-100 my-1">${comm[0]}</div>
+        <div class="font-mono text-lg font-bold text-agri-leaf">${comm[1]} Đại lý</div>
+      `;
+      topStrip.appendChild(card);
+    });
+
+    /* */
+    let sortDir = 1;
+    let lastSortCol = -1;
+    let tableData = [...DATA];
+
+    let currentPage = 1;
+    const pageSize = 50;
+
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      const totalItems = tableData.length;
+      
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = Math.min(startIdx + pageSize, totalItems);
+      
+      const paginatedData = tableData.slice(startIdx, endIdx);
+      
+      document.getElementById('tableCount').textContent = `Tìm thấy ${totalItems} / 730 cơ sở`;
+      
+      if (totalItems === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-[#4d6e5a] py-8">Không tìm thấy cơ sở nào khớp với từ khóa tìm kiếm.</td></tr>`;
+        document.getElementById('paginationInfo').textContent = `Đang xem 0 - 0 trong số 0 cơ sở`;
+        renderPaginationButtons(0);
+        return;
+      }
+      
+      tbody.innerHTML = paginatedData.map((d, idx) => `
+        <tr class="border-b border-agri-border/40 hover:bg-agri-leaf/5 transition-colors">
+          <td class="p-3 font-mono text-right text-slate-400">${startIdx + idx + 1}</td>
+          <td class="p-3 font-bold text-slate-200">${d.don_vi}</td>
+          <td class="p-3 text-slate-300"><i class="fa-solid fa-location-dot text-agri-leaf mr-1.5"></i>${d.xa}</td>
+          <td class="p-3 text-slate-300">${d.nguoi_dd}</td>
+          <td class="p-3 font-mono text-slate-400 text-xs">${d.phone}</td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('paginationInfo').textContent = `Đang xem ${startIdx + 1} - ${endIdx} trong số ${totalItems} cơ sở`;
+      
+      const totalPages = Math.ceil(totalItems / pageSize);
+      renderPaginationButtons(totalPages);
+    }
+
+    function renderPaginationButtons(totalPages) {
+      const container = document.getElementById('paginationBtns');
+      container.innerHTML = "";
+      
+      if (totalPages <= 1) return;
+      
+      // Nút về trang trước
+      const prevBtn = document.createElement('button');
+      prevBtn.className = `page-btn bg-agri-card border border-agri-border hover:border-agri-leaf rounded py-1 px-2.5 text-slate-300 text-[11px] font-mono cursor-pointer transition-colors ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : ''}`;
+      prevBtn.innerHTML = `<i class="fa-solid fa-angle-left"></i>`;
+      prevBtn.onclick = function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable();
+        }
+      };
+      container.appendChild(prevBtn);
+
+      // Hiển thị dải phân trang thông minh (giới hạn tối đa 5 nút hiển thị)
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + 4);
+      if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.className = `page-btn bg-agri-card border border-agri-border hover:border-agri-leaf rounded py-1 px-2.5 text-slate-300 text-[11px] font-mono cursor-pointer transition-colors ${currentPage === i ? 'bg-agri-leaf border-agri-leaf text-agri-dark font-semibold' : ''}`;
+        btn.textContent = i;
+        btn.onclick = function() {
+          currentPage = i;
+          renderTable();
+        };
+        container.appendChild(btn);
+      }
+
+      // Nút sang trang sau
+      const nextBtn = document.createElement('button');
+      nextBtn.className = `page-btn bg-agri-card border border-agri-border hover:border-agri-leaf rounded py-1 px-2.5 text-slate-300 text-[11px] font-mono cursor-pointer transition-colors ${currentPage === totalPages ? 'opacity-40 cursor-not-allowed' : ''}`;
+      nextBtn.innerHTML = `<i class="fa-solid fa-angle-right"></i>`;
+      nextBtn.onclick = function() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTable();
+        }
+      };
+      container.appendChild(nextBtn);
+    }
+
+    /* */
+    function applyFilters() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      let filtered = DATA.filter(d => 
+        d.don_vi.toLowerCase().includes(q) || 
+        d.nguoi_dd.toLowerCase().includes(q) || 
+        d.xa.toLowerCase().includes(q)
+      );
+      
+      tableData = filtered;
+      currentPage = 1;
+      renderTable();
+    }
+
+    function sortTable(col) {
+      if (col === lastSortCol) sortDir *= -1; else sortDir = 1;
+      lastSortCol = col;
+      const keys = ['stt','don_vi','xa','nguoi_dd','phone'];
+      tableData.sort((a,b) => {
+        const av = a[keys[col]], bv = b[keys[col]];
+        return typeof av === 'string' ? av.localeCompare(bv)*sortDir : (av-bv)*sortDir;
+      });
+      currentPage = 1;
+      renderTable();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    
+    // Khởi động render trang dữ liệu đầu tiên
+    renderTable();
+  </script>
+</body>
+</html>
